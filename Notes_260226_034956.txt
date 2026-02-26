@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="font-family: system-ui; padding: 20px; text-align: center;">
+    <h2>🛒 شکن میرزا</h2>
+    <div style="background: #f0f0f0; padding: 20px; border-radius: 15px;">
+        <p>🔹 حجم: ۲۰ گیگ</p>
+        <p>🔹 مدت: ۳۰ روز</p>
+        <p>💰 قیمت: ۵۰,۰۰۰ تومن</p>
+        <button onclick="buy()" style="background: #0088cc; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 18px;">
+            خرید از ربات
+        </button>
+    </div>
+
+    <script>
+        function buy() {
+            // این پیام می‌ره به رباتت
+            Telegram.WebApp.sendData("سفارش جدید: فیلترشکن ۲۰ گیگ");
+            Telegram.WebApp.close();
+        }
+    </script>
+</body>
+</html>
