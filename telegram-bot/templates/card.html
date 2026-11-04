@@ -79,6 +79,9 @@ ul.bul li:before{content:"";width:11px;height:11px;border-radius:50%;background:
 .row{display:flex;justify-content:space-between;align-items:center;padding:1.5px 0}
 .row .m{font-size:19px;font-weight:700}
 .row .p{background:var(--tile);border-radius:9px;min-width:170px;text-align:right;padding:0 12px;font-size:20px;line-height:1.45;font-weight:800;font-variant-numeric:tabular-nums}
+.row .p .mk{font-size:15px;font-weight:900;margin-right:8px;vertical-align:1px}
+.row .p .mk.up{color:#d93a4a}.row .p .mk.down{color:#1f9d55}.row .p .mk.new{color:#3a4fd1}
+.row.chg .p{box-shadow:inset 0 0 0 2px #f6c21c}
 .note{background:#fff;border-radius:20px;padding:14px 24px;font-size:16px;font-weight:500;line-height:1.8;margin-top:4px}
 footer{position:absolute;left:0;right:0;bottom:0;height:108px;background:var(--blue);border-top:6px solid var(--yellow);
   border-radius:34px 34px 0 0;display:flex;align-items:center;justify-content:space-between;padding:0 38px;color:#fff;z-index:2}
@@ -149,7 +152,7 @@ function render(d){
   } else if(d.type==='registry'){
     const grp=g=>`<div class="grp"><div class="gh"><div class="ic">${ICONS.phone}</div><b>${esc(g.name)}</b><small>${esc(g.brand||'')}</small>
       <span class="badge ${g.brand==='Samsung'?'dark':''}">${g.rows.length} مدل</span></div>
-      ${g.rows.map(r=>`<div class="row"><span class="m">${esc(r[0])}</span><span class="p">${esc(r[1]||'—')}</span></div>`).join('')}</div>`;
+      ${g.rows.map(r=>{const mk={up:'▲',down:'▼',new:'جدید'}[r[2]]||'';return `<div class="row ${mk?'chg':''}"><span class="m">${esc(r[0])}</span><span class="p">${mk?`<span class="mk ${r[2]}">${mk}</span>`:''}${esc(r[1]||'—')}</span></div>`}).join('')}</div>`;
     // like the reference: newest models fill the left column top-down, the rest continue in the right column
     const hs=d.groups.map(g=>g.rows.length+1.6), tot=hs.reduce((a,b)=>a+b,0);
     let acc=0,cut=d.groups.length;

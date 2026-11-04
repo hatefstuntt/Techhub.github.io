@@ -8,6 +8,7 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - Single cards without a usable source photo can use `"graphic": {"label", "icons": [idcard|plane|star], "chips"}` instead of `image` (see data/news-fragment-kyc.json). Add new icons to `GFX` in the template when needed.
 - `render.js`: `node render.js data.json out.png` renders a card (Playwright/Chromium).
 - `prep_image.py`: crops source watermarks off article images (`--bottom 0.13` for GSMArena).
+- `registry_diff.py`: compares a newly transcribed price table with `data/registry-latest.json`, marks ▲/▼/جدید rows, prints the dedup key and accepts the posted table as the new latest.
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
@@ -17,6 +18,13 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - Every other hour → **single** news card (`single`): one fresh story each, with the article's real image as `image` or a `graphic` hero.
 - Variety: check the last ~10 entries of `data/posted.json` and don't post two cards in a row about the same company or topic. Mix phones, Iran mobile market/registry, Telegram/apps, internet/security and AI.
 - Quality over quantity: if there's no fresh, verified story, skip that hour. 12 good posts beat 14 weak ones.
+
+## Registry watch (every run, before anything else)
+The owner wants the price list updated whenever any source posts a table that differs from our last one, even in a single model, at any hour.
+1. Check t.me/s/sabregistry and every other registry source in this file for customs-price table images posted since `data/registry-latest.json` was last accepted (see its `pills` date and the git log).
+2. Transcribe the newest table into `data/registry-<jalali-date>[-HHMM].json` (same shape as registry-latest.json). Download and upscale the image and double-check every row. Never guess a price.
+3. Run `python3 registry_diff.py <new.json> --mark`. Exit code 3 means identical, so do nothing. Exit code 0 means prices changed: render it, add the note line "▲ گران‌تر / ▼ ارزان‌تر نسبت به لیست قبل", caption as in data/registry-1405-08-10.caption.html with a line saying how many models changed, send with `--key` = the printed KEY, then run `python3 registry_diff.py <new.json> --accept` and commit.
+4. A price update replaces that hour's planned post (still one post per run).
 
 ## Sources (chosen by the owner)
 - **t.me/s/sabregistry**: main registry source. Its "📣 آخرین لیست قیمت گمرکی" posts carry a customs-price table **image** (dated, e.g. 1405/08/10); read the image and rebuild it as a `registry` card. Its daily "رجیستری در حال انجام" posts give register/pass service fees, and its announcements (blocked models, activation-code delays) are good news items.
