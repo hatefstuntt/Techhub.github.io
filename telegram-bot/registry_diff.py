@@ -10,6 +10,8 @@ Exit code 0 = prices differ (post an update), 3 = identical (don't post).
 Prints the key to use with send.py: registry:<sha8 of all model/price pairs>.
 """
 import argparse, hashlib, json, os, shutil, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import state
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LATEST = os.path.join(HERE, "data", "registry-latest.json")
@@ -45,8 +47,19 @@ def main():
         print(f"registry-latest.json <- {a.new}")
         return
 
-    old = json.load(open(LATEST, encoding="utf-8")) if os.path.exists(LATEST) else {"groups": []}
-    o, n = rows(old), rows(new)
+    # baseline = prices of our newest posted registry card, read from the channel itself
+    o = None
+    try:
+        o = state.last_registry_prices()
+    except Exception as e:
+        print(f"WARN cannot read channel baseline: {e}")
+    if o is None:
+        old = json.load(open(LATEST, encoding="utf-8")) if os.path.exists(LATEST) else {"groups": []}
+        o = rows(old)
+        print("baseline: data/registry-latest.json")
+    else:
+        print("baseline: last registry card in the channel")
+    n = rows(new)
     changes = []
     for m, p in n.items():
         if m not in o:

@@ -12,6 +12,8 @@ Usage:
 """
 import argparse, html, json, os, re, sys, time, urllib.request, uuid
 from datetime import datetime, timezone
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import state
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOG = os.path.join(HERE, "data", "posted.json")
@@ -51,6 +53,8 @@ def main():
     ap.add_argument("--key", required=True)
     ap.add_argument("--chat", action="append", help="repeatable; default: all DEFAULT_CHATS")
     ap.add_argument("--force", action="store_true", help="post even if the key was already posted")
+    ap.add_argument("--source-post", type=int, help="registry: id of the source channel post the table came from")
+    ap.add_argument("--registry-json", help="registry: the table json, stored compressed in the hidden marker as the next diff baseline")
     a = ap.parse_args()
 
     token = os.environ.get("TG_BOT_TOKEN")
@@ -59,7 +63,8 @@ def main():
 
     chats = a.chat or DEFAULT_CHATS
     log = load_log()
-    caption = open(a.caption, encoding="utf-8").read().strip()
+    caption = state.add_marker(open(a.caption, encoding="utf-8").read().strip(), a.key, a.source_post,
+                               json.load(open(a.registry_json, encoding="utf-8")) if a.registry_json else None)
     n = visible_len(caption)
     if n > 1024:
         sys.exit(f"caption too long: {n} visible chars (max 1024)")
@@ -68,7 +73,9 @@ def main():
 
     failed = False
     for chat in chats:
-        if not a.force and any(r["key"] == a.key and r.get("chat") == chat for r in log):
+        # the channel itself is the source of truth (scheduled runs can't push posted.json)
+        if not a.force and (state.already_posted(chat, a.key)
+                            or any(r["key"] == a.key and r.get("chat") == chat for r in log)):
             print(f"SKIP already posted in {chat}: {a.key}")
             continue
         res = send_photo(token, chat, img, ctype, os.path.basename(a.image), caption)
@@ -77,6 +84,9 @@ def main():
             failed = True
             continue
         mid = res["result"]["message_id"]
+        urls = [e.get("url", "") for e in res["result"].get("caption_entities", [])]
+        if not any(f"k={state.key_hash(a.key)}" in u for u in urls):
+            print(f"WARN {chat}: hidden dedup marker missing in the sent caption; check the footer")
         log.append({"key": a.key, "chat": chat, "message_id": mid,
                     "posted_at": datetime.now(timezone.utc).isoformat(timespec="seconds")})
         with open(LOG, "w", encoding="utf-8") as f:

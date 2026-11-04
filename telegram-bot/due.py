@@ -8,7 +8,9 @@ Prints a summary and a final line:  DUE posts=<n> registry=<yes|no>
 Schedule: 2 posts every 2 hours (09:07, 11:07 … 21:07 Tehran) = 14 a day. If earlier runs were missed
 (usage limit, errors), the deficit is caught up at the next run, up to MAX_PER_RUN per run.
 """
-import json, os, re, urllib.request
+import json, os, re, sys, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import state
 from datetime import datetime, timezone, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,21 +29,16 @@ def expected_by(now):
 
 
 def posted_today(now):
-    log = json.load(open(os.path.join(HERE, "data", "posted.json"), encoding="utf-8"))
+    """Count today's posts in the channel itself (git-independent)."""
     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    n = 0
-    for r in log:
-        if r.get("chat") != CHANNEL:
-            continue
-        t = datetime.fromisoformat(r["posted_at"]).astimezone(TEHRAN)
-        if t >= start:
-            n += 1
-    return n
+    return sum(1 for p in state.fetch_recent(CHANNEL) if p["time"] and p["time"] >= start)
 
 
 def new_registry_posts():
     """Return [(channel, post_id)] of price-table posts (photo + 'قیمت گمرکی') not in registry-seen.json."""
     seen = json.load(open(SEEN, encoding="utf-8")) if os.path.exists(SEEN) else {}
+    # the newest source post we already turned into a card is recorded in our own channel (s=<id>)
+    seen["sabregistry"] = max(seen.get("sabregistry", 0), state.last_registry_source_id(CHANNEL))
     found = []
     for ch in REGISTRY_SOURCES:
         try:

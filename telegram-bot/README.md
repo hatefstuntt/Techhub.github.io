@@ -14,6 +14,14 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
+## State lives in the channel, not in git (important)
+Scheduled runs have **no push access** to this repo, so `data/posted.json` and `registry-latest.json` are NOT updated between runs. The channel itself is the record:
+- `send.py` puts a hidden marker in the footer link (`t.me/techhub_ir?k=<hash of key>[&s=<registry source post id>][&p=<packed prices>]`) and refuses to post a key whose marker is already in @techhubvpn/@techhub_ir (read from `t.me/s/<channel>`).
+- `due.py` counts today's posts from the channel. `registry_diff.py` takes its baseline from the newest registry card's hidden prices.
+- Before choosing a story, run `python3 recent.py` and read the recent titles. Never post a story or topic that's already there (even with different wording or a different key).
+- For registry posts, pass `--source-post <id of the source's table post> --registry-json <new.json>` to send.py.
+- Committing/pushing is optional: try once, and if it fails (403), ignore it.
+
 ## Daily plan: 14 posts a day, with catch-up
 The routine fires hourly (09:07–22:07 Tehran). **Every run starts with `python3 due.py`** (cheap):
 - `DUE posts=0 registry=no` → nothing is due: stop right away (no research), to save usage.
