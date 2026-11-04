@@ -1,13 +1,13 @@
 # TechHub daily Telegram poster
 
-Posts daily cards to the Telegram channel **@techhubvpn** in the exact style of @techhub_ir.
+Posts daily cards to the Telegram channels **@techhubvpn** and **@techhub_ir** (the bot is admin in both) in the exact style of @techhub_ir. `send.py` posts each card to both channels by default.
 The Telegram Bot API is reachable directly from the cloud session, so there is no relay.
 
 ## Files
 - `templates/card.html`: one template, three layouts (`digest`, `registry`, `single`), with the TechHub logo, Vazirmatn font and footer bar.
 - `render.js`: `node render.js data.json out.png` renders a card (Playwright/Chromium).
 - `prep_image.py`: crops source watermarks off article images (`--bottom 0.13` for GSMArena).
-- `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption and records the key in `data/posted.json` (dedup).
+- `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
 ## Daily plan (at least 5 posts)
