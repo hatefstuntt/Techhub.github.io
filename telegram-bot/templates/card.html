@@ -131,6 +131,8 @@ function gfx(g){
   return `<div class="gfx">${rings}<div class="lbl">${esc(g.label||'')}</div><div class="icons">${icons}</div>
     <div class="chips">${(g.chips||[]).map((c,i)=>`<span class="chip ${i===0?'y':''}">${esc(c)}</span>`).join('')}</div></div>`;
 }
+// isolate Latin runs (model names) so RTL lines keep their word order
+const fa=t=>esc(t).replace(/[A-Za-z][A-Za-z0-9+&().\-]*(?: [A-Za-z0-9+&().\-]+)*/g,m=>`<bdi>${m}</bdi>`);
 function section(icon,title,body){return `<section class="card"><div class="sh"><div class="ic">${ICONS[icon]}</div><h2>${esc(title)}</h2></div>${body}</section>`}
 
 function render(d){
@@ -140,13 +142,13 @@ function render(d){
   const m=document.getElementById('main');
   if(d.type==='digest'){
     m.innerHTML=
-      section('chart',d.internet_title||'وضعیت اینترنت',`<ul class="bul">${d.internet.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)+
-      section('phone',d.news_title||'خبرهای تکنولوژی',`<div class="tiles">${d.news.map(n=>`<div class="tile"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></div>`).join('')}</div>`);
+      section('chart',d.internet_title||'وضعیت اینترنت',`<ul class="bul">${d.internet.map(x=>`<li><span>${fa(x)}</span></li>`).join('')}</ul>`)+
+      section('phone',d.news_title||'خبرهای تکنولوژی',`<div class="tiles">${d.news.map(n=>`<div class="tile"><h3>${esc(n.title)}</h3><p>${fa(n.text)}</p></div>`).join('')}</div>`);
   } else if(d.type==='single'){
     m.innerHTML=`<section class="card">
       ${d.image?`<div class="hero"><img src="${esc(d.image)}"></div>`:(d.graphic?gfx(d.graphic):'')}
-      <div class="headline">${esc(d.headline)}</div>
-      <ul class="bul">${(d.points||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <div class="headline">${fa(d.headline)}</div>
+      <ul class="bul">${(d.points||[]).map(x=>`<li><span>${fa(x)}</span></li>`).join('')}</ul>
       ${d.source?`<div class="src">منبع: ${esc(d.source)}</div>`:''}
     </section>`;
   } else if(d.type==='registry'){
