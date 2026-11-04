@@ -14,6 +14,14 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 2. **Registry price card** (`registry`): customs/registry prices read from the source channels the owner listed. Never invent or estimate a price; if no source posted today, skip this card.
 3. **3 or more single-news cards** (`single`): one fresh mobile/tech story each, with the article's real image as `image` (download it first, then pass the local path).
 
+## Sources (chosen by the owner)
+- **t.me/s/sabregistry**: main registry source. Its "📣 آخرین لیست قیمت گمرکی" posts carry a customs-price table **image** (dated, e.g. 1405/08/10); read the image and rebuild it as a `registry` card. Its daily "رجیستری در حال انجام" posts give register/pass service fees, and its announcements (blocked models, activation-code delays) are good news items.
+- **t.me/s/figofixir**: mobile repair/unlock channel. Use only general news from it; never repost cracked software, FRP/MDM/iCloud bypass tools or their download links.
+- **t.me/rezatopgsmir**: the public web preview is disabled, so it can't be read from here.
+- **top-gsm.ir**: blocks connections from outside Iran (connection reset / 503), so it can't be read from here.
+- Global mobile/tech news: gsmarena.com and similar (reachable; use the article's own image).
+- Fetch a public channel with `curl -sS https://t.me/s/<channel>`. Telesco.pe image downloads sometimes return a 500 error; retry 2–3 times.
+
 Rules:
 - Every story must be published in the last 24–48 h. Check the date on the article itself.
 - Normalize keys: `digest:YYYY-MM-DD`, `registry:YYYY-MM-DD`, `news:<domain>/<path-without-query>`. `send.py` skips keys already posted.
