@@ -9,6 +9,7 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - `render.js`: `node render.js data.json out.png` renders a card (Playwright/Chromium).
 - `prep_image.py`: crops source watermarks off article images (`--bottom 0.13` for GSMArena).
 - `registry_diff.py`: compares a newly transcribed price table with `data/registry-latest.json`, marks ▲/▼/جدید rows, prints the dedup key and accepts the posted table as the new latest.
+- `send_story.py`: `python3 send_story.py out/card.jpg "<title>" "<tag>" "<note>"` renders a 1080x1920 story (story.js + templates/story.html) and sends it to the owner's PV (chat 1010355565). The owner shares it as a channel story manually, since bots can't post channel stories. Never delete or change the bot's webhook (telemob.ir): another service uses this bot.
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
@@ -18,6 +19,11 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - Every other hour → **single** news card (`single`): one fresh story each, with the article's real image as `image` or a `graphic` hero.
 - Variety: check the last ~10 entries of `data/posted.json` and don't post two cards in a row about the same company or topic. Mix phones, Iran mobile market/registry, Telegram/apps, internet/security and AI.
 - Quality over quantity: if there's no fresh, verified story, skip that hour. 12 good posts beat 14 weak ones.
+
+## Stories (sent to the owner's PV)
+- After every registry price update post: `send_story.py` with tag "به‌روزرسانی قیمت" and title "لیست جدید قیمت گمرکی".
+- Plus about 3 a day for the most interesting news posts, best picked at the 12:07, 17:07 and 21:07 runs, with tag "خبر داغ" and a short (max ~30 chars) Persian title.
+- Send the story only after the channel post succeeded.
 
 ## Registry watch (every run, before anything else)
 The owner wants the price list updated whenever any source posts a table that differs from our last one, even in a single model, at any hour.
