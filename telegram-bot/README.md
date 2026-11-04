@@ -29,7 +29,16 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - **t.me/s/mammadturkgsm**: almost all cracked unlock tools (UnlockTool, TSM, XRY cracks). Do not use those posts; only general repair news, if any.
 - **t.me/haji_part1**: only invite links, no news content. Not usable.
 - Telegram-channel news is second-hand: confirm the fact with an original or reputable report (web search) before posting, and mark unofficial items as unofficial or "شایعه".
-- Global mobile/tech news: gsmarena.com and similar (reachable; use the article's own image).
+### World sources: scan them all every run (all tested as reachable from the cloud session)
+Don't limit yourself to the owner's channels. On each run, skim the latest items from these and pick the most important, freshest story that fits the channel and isn't posted yet:
+- **Phones**: gsmarena.com/rss-news-reviews.php3, androidauthority.com/feed/, 9to5google.com/feed/, 9to5mac.com/feed/, macrumors.com (follow the redirect), gizmochina.com/feed/, notebookcheck.net/News.152.100.html
+- **General tech**: theverge.com/rss/index.xml, techcrunch.com/feed/, engadget.com/rss.xml, feeds.arstechnica.com/arstechnica/index, wired.com/feed/rss
+- **Official newsrooms**: apple.com/newsroom/rss-feed.rss, news.samsung.com/global/feed, blog.google/rss/, telegram.org/blog
+- **Persian / Iran** (Iranian websites block foreign connections, so use their Telegram previews): t.me/s/digiato (tech), t.me/s/khabaronline_ir and t.me/s/irna_1313 (official Iran news: customs/registry rules, telecom decisions; take only tech/mobile/internet items), feeds.bbci.co.uk/persian/rss.xml, techrasa.com/feed/
+- **Internet status in Iran** (for the digest): t.me/s/netblocks and netblocks.org/reports, plus t.me/s/asrnovin_ir outage reports
+- **Search**: use web search for breaking news and to confirm anything taken from a Telegram channel.
+- Blocked from here (don't waste time): zoomit.ir, digiato.com, isna/irna websites, sammobile, phonearena, bleepingcomputer, reuters, xda, androidpolice, radar.cloudflare.com.
+- Stay on topic: technology, phones, internet, apps and AI only. Never post political news, even from news agencies.
 - Fetch a public channel with `curl -sS https://t.me/s/<channel>`. Telesco.pe image downloads sometimes return a 500 error; retry 2–3 times.
 
 Rules:
