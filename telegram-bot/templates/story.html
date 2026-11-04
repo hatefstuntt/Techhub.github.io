@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>TechHub story</title>
+<style>
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700}
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Black.woff2) format('woff2');font-weight:900}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:#26328f}
+body{font-family:Vaz,sans-serif;-webkit-font-smoothing:antialiased}
+.st{position:relative;width:1080px;height:1920px;overflow:hidden;
+  background:radial-gradient(circle at 80% 12%,#6f86ff 0%,#3a4fd1 40%,#26328f 100%)}
+.ring{position:absolute;border-radius:50%;border:3px solid rgba(255,255,255,.12)}
+.top{position:absolute;top:70px;left:0;right:0;text-align:center;color:#fff}
+.top .tag{display:inline-block;background:#f6c21c;color:#1b2353;font-weight:900;font-size:44px;padding:10px 34px;border-radius:22px}
+.top h1{font-weight:900;font-size:64px;margin-top:22px;line-height:1.3;padding:0 60px}
+.card{position:absolute;left:50%;top:330px;transform:translateX(-50%);width:940px;border-radius:38px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);background:#fff}
+.card img{display:block;width:100%}
+.cta{position:absolute;left:0;right:0;bottom:110px;text-align:center;color:#fff}
+.cta .b{display:inline-block;background:#fff;color:#3a4fd1;font-weight:900;font-size:46px;padding:18px 48px;border-radius:30px}
+.cta .h{margin-top:22px;font-weight:700;font-size:38px;direction:ltr;opacity:.95}
+</style>
+</head>
+<body>
+<div class="st" id="page">
+  <div class="ring" style="width:900px;height:900px;left:-420px;top:-300px"></div>
+  <div class="ring" style="width:700px;height:700px;right:-300px;bottom:-200px"></div>
+  <div class="top"><span class="tag" id="tag"></span><h1 id="title"></h1></div>
+  <div class="card"><img id="img"></div>
+  <div class="cta"><span class="b" id="cta"></span><div class="h" id="handle"></div></div>
+</div>
+<script>
+window.render=d=>{
+  tag.textContent=d.tag||'تک هاب';
+  title.textContent=d.title||'';
+  cta.textContent=d.cta||'جزئیات کامل در کانال';
+  handle.textContent=d.handle||'@techhub_ir';
+  img.src=d.card;
+  // shrink the card if it would hit the call-to-action area
+  return new Promise(r=>{img.onload=()=>{const c=document.querySelector('.card');const max=1920-330-330;
+    if(c.offsetHeight>max){const w=Math.floor(940*max/c.offsetHeight);c.style.width=w+'px'}r()}});
+};
+</script>
+</body>
+</html>
