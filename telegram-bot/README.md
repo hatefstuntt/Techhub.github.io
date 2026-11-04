@@ -11,10 +11,12 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
-## Daily plan (at least 5 posts)
-1. **Digest card** (`digest`): Iran internet status (4 bullets) plus 4 short mobile/tech news tiles. Use the caption shape in `data/digest.caption.example.html`.
-2. **Registry price card** (`registry`): customs/registry prices read from the source channels the owner listed. Never invent or estimate a price; if no source posted today, skip this card.
-3. **3 or more single-news cards** (`single`): one fresh mobile/tech story each, with the article's real image as `image` (download it first, then pass the local path).
+## Daily plan (12–15 posts, one per hourly run 09:07–22:07 Tehran)
+- 10:07 → **digest** card (`digest`): Iran internet status (4 bullets) plus 4 short mobile/tech news tiles. Use the caption shape in `data/digest.caption.example.html`.
+- 15:07 and 20:07 → **registry** price card (`registry`) if a source has posted a new customs-price table, otherwise a single-news card. Never invent or estimate a price.
+- Every other hour → **single** news card (`single`): one fresh story each, with the article's real image as `image` or a `graphic` hero.
+- Variety: check the last ~10 entries of `data/posted.json` and don't post two cards in a row about the same company or topic. Mix phones, Iran mobile market/registry, Telegram/apps, internet/security and AI.
+- Quality over quantity: if there's no fresh, verified story, skip that hour. 12 good posts beat 14 weak ones.
 
 ## Sources (chosen by the owner)
 - **t.me/s/sabregistry**: main registry source. Its "📣 آخرین لیست قیمت گمرکی" posts carry a customs-price table **image** (dated, e.g. 1405/08/10); read the image and rebuild it as a `registry` card. Its daily "رجیستری در حال انجام" posts give register/pass service fees, and its announcements (blocked models, activation-code delays) are good news items.
