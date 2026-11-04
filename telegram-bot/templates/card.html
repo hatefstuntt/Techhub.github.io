@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>TechHub card</title>
+<style>
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400}
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Medium.woff2) format('woff2');font-weight:500}
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700}
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-ExtraBold.woff2) format('woff2');font-weight:800}
+@font-face{font-family:Vaz;src:url(../assets/fonts/Vazirmatn-Black.woff2) format('woff2');font-weight:900}
+:root{
+  --navy:#1b2353; --blue:#3a4fd1; --blue-text:#3346c4; --muted:#5b6a8f;
+  --tile:#eceffd; --yellow:#f6c21c; --card:#ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1024px;background:#e9f0f8}
+body{font-family:Vaz,sans-serif;color:var(--navy);-webkit-font-smoothing:antialiased}
+.page{position:relative;width:1024px;min-height:1280px;overflow:hidden;
+  background:linear-gradient(160deg,#dde9f6 0%,#e8f1f5 45%,#f3f3e2 80%,#f7f0d6 100%);
+  padding-bottom:130px}
+.deco{position:absolute;border-radius:50%;z-index:0}
+.deco.a{width:520px;height:520px;left:-210px;top:-280px;background:#cfe0f3}
+.deco.b{width:190px;height:190px;right:-70px;top:310px;background:#f7e6a6;opacity:.75}
+.deco.c{width:280px;height:280px;left:-150px;bottom:150px;background:#d9e1ea;opacity:.8}
+.deco.d{width:260px;height:260px;right:-60px;bottom:70px;background:#f6e9b7;opacity:.6}
+.z{position:relative;z-index:1}
+header{height:260px;position:relative}
+.logo{position:absolute;left:22px;top:18px;width:334px}
+.htxt{position:absolute;right:36px;top:40px;text-align:right;max-width:600px}
+.htxt h1{font-weight:900;font-size:46px;line-height:1.25;color:var(--navy)}
+.htxt .sub{font-size:22px;color:var(--muted);margin-top:10px;font-weight:500}
+.htxt .bar{width:140px;height:8px;border-radius:8px;background:var(--yellow);margin:12px 0 0 auto}
+.pills{display:flex;gap:12px;justify-content:flex-start;margin-top:22px}
+.pill{background:#fff;border-radius:14px;padding:8px 18px;font-weight:700;font-size:20px;color:var(--navy);
+  box-shadow:0 2px 6px rgba(30,40,90,.06)}
+main{padding:0 34px}
+.card{background:var(--card);border-radius:26px;padding:26px 28px;margin-bottom:22px;box-shadow:0 4px 16px rgba(30,40,90,.05)}
+.sh{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.ic{width:46px;height:46px;border-radius:11px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex:none}
+.ic svg{width:24px;height:24px}
+.sh h2{font-weight:800;font-size:31px}
+ul.bul{list-style:none}
+ul.bul li{font-size:25px;font-weight:700;line-height:1.5;padding:6px 0;display:flex;gap:16px;align-items:baseline}
+ul.bul li:before{content:"";width:11px;height:11px;border-radius:50%;background:var(--blue);flex:none;transform:translateY(-3px)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tile{background:var(--tile);border-radius:18px;padding:20px 22px}
+.tile h3{font-weight:800;font-size:29px;color:var(--blue-text);margin-bottom:8px;direction:ltr;text-align:right;unicode-bidi:plaintext}
+.tile p{font-size:22px;font-weight:500;line-height:1.75}
+/* single news */
+.hero{width:100%;border-radius:20px;overflow:hidden;background:#dfe5f3;margin-bottom:22px}
+.hero img{display:block;width:100%;height:470px;object-fit:cover}
+.headline{font-size:33px;font-weight:900;line-height:1.55;margin-bottom:14px}
+.src{font-size:19px;color:var(--muted);font-weight:500;margin-top:10px}
+/* registry */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.colh{display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:var(--navy);padding:0 12px 6px;direction:ltr}
+.colh span:last-child{direction:rtl}
+.grp{background:#fff;border-radius:20px;padding:10px 12px 8px;margin-bottom:12px;direction:ltr;box-shadow:0 3px 12px rgba(30,40,90,.05)}
+.gh{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.gh .ic{width:34px;height:34px;border-radius:9px}
+.gh .ic svg{width:18px;height:18px}
+.gh b{font-size:21px;font-weight:800}
+.gh small{font-size:13px;color:var(--muted);font-weight:500}
+.badge{margin-left:auto;background:var(--blue);color:#fff;border-radius:9px;font-size:13px;font-weight:700;padding:3px 10px;direction:rtl}
+.badge.dark{background:#22307e}
+.row{display:flex;justify-content:space-between;align-items:center;padding:1.5px 0}
+.row .m{font-size:19px;font-weight:700}
+.row .p{background:var(--tile);border-radius:9px;min-width:170px;text-align:right;padding:0 12px;font-size:20px;line-height:1.45;font-weight:800;font-variant-numeric:tabular-nums}
+.note{background:#fff;border-radius:20px;padding:14px 24px;font-size:16px;font-weight:500;line-height:1.8;margin-top:4px}
+footer{position:absolute;left:0;right:0;bottom:0;height:108px;background:var(--blue);border-top:6px solid var(--yellow);
+  border-radius:34px 34px 0 0;display:flex;align-items:center;justify-content:space-between;padding:0 38px;color:#fff;z-index:2}
+footer .slog{font-size:23px;font-weight:700}
+footer .soc{display:flex;align-items:center;gap:16px;direction:ltr;font-size:23px;font-weight:800}
+footer .soc svg{width:28px;height:28px}
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <div class="deco a"></div><div class="deco b"></div><div class="deco c"></div><div class="deco d"></div>
+  <header class="z">
+    <img class="logo" src="../assets/logo.png" alt="">
+    <div class="htxt">
+      <h1 id="title"></h1>
+      <div class="sub" id="subtitle"></div>
+      <div class="bar"></div>
+      <div class="pills" id="pills"></div>
+    </div>
+  </header>
+  <main class="z" id="main"></main>
+  <footer>
+    <div class="slog">تک هاب، همراه همیشگی دنیای تکنولوژی</div>
+    <div class="soc">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M21.5 3.5 2.8 10.7c-.9.4-.9 1.6.1 1.9l4.6 1.5 1.8 5.6c.3.8 1.3 1 1.9.4l2.6-2.5 4.8 3.5c.7.5 1.7.1 1.9-.7L23 4.9c.2-1-.6-1.8-1.5-1.4Z"/><path d="m7.6 14 10.2-6.6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="#fff"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="#fff"/></svg>
+      <span>Techhub_IR</span>
+    </div>
+  </footer>
+</div>
+<script>
+const ICONS={
+  chart:'<svg viewBox="0 0 24 24" fill="#fff"><rect x="4" y="13" width="3.5" height="7" rx="1"/><rect x="10.25" y="9" width="3.5" height="11" rx="1"/><rect x="16.5" y="5" width="3.5" height="15" rx="1"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.2h2" stroke-linecap="round"/></svg>',
+  news:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h6"/></svg>'
+};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function section(icon,title,body){return `<section class="card"><div class="sh"><div class="ic">${ICONS[icon]}</div><h2>${esc(title)}</h2></div>${body}</section>`}
+
+function render(d){
+  document.getElementById('title').textContent=d.title;
+  document.getElementById('subtitle').textContent=d.subtitle||'';
+  document.getElementById('pills').innerHTML=(d.pills||[]).map(p=>`<div class="pill">${esc(p)}</div>`).join('');
+  const m=document.getElementById('main');
+  if(d.type==='digest'){
+    m.innerHTML=
+      section('chart',d.internet_title||'وضعیت اینترنت',`<ul class="bul">${d.internet.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`)+
+      section('phone',d.news_title||'خبرهای تکنولوژی',`<div class="tiles">${d.news.map(n=>`<div class="tile"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></div>`).join('')}</div>`);
+  } else if(d.type==='single'){
+    m.innerHTML=`<section class="card">
+      ${d.image?`<div class="hero"><img src="${esc(d.image)}"></div>`:''}
+      <div class="headline">${esc(d.headline)}</div>
+      <ul class="bul">${(d.points||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${d.source?`<div class="src">منبع: ${esc(d.source)}</div>`:''}
+    </section>`;
+  } else if(d.type==='registry'){
+    const grp=g=>`<div class="grp"><div class="gh"><div class="ic">${ICONS.phone}</div><b>${esc(g.name)}</b><small>${esc(g.brand||'')}</small>
+      <span class="badge ${g.brand==='Samsung'?'dark':''}">${g.rows.length} مدل</span></div>
+      ${g.rows.map(r=>`<div class="row"><span class="m">${esc(r[0])}</span><span class="p">${esc(r[1]||'—')}</span></div>`).join('')}</div>`;
+    // like the reference: newest models fill the left column top-down, the rest continue in the right column
+    const hs=d.groups.map(g=>g.rows.length+1.6), tot=hs.reduce((a,b)=>a+b,0);
+    let acc=0,cut=d.groups.length;
+    for(let i=0;i<hs.length;i++){ if(acc+hs[i]/2>tot/2){cut=i;break} acc+=hs[i]; }
+    const L=d.groups.slice(0,cut), R=d.groups.slice(cut);
+    const colh='<div class="colh"><span>مدل</span><span>قیمت (تومان)</span></div>';
+    m.innerHTML=`<div class="cols" style="direction:ltr"><div>${colh}${L.map(grp).join('')}</div><div>${colh}${R.map(grp).join('')}</div></div>
+      ${d.note?`<div class="note">${(Array.isArray(d.note)?d.note:[d.note]).map(esc).join('<br>')}</div>`:''}`;
+  }
+}
+window.render=render;
+</script>
+</body>
+</html>
