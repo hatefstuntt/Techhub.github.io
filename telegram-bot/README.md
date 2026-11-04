@@ -6,6 +6,7 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 ## Files
 - `templates/card.html`: one template, three layouts (`digest`, `registry`, `single`), with the TechHub logo, Vazirmatn font and footer bar.
 - `render.js`: `node render.js data.json out.png` renders a card (Playwright/Chromium).
+- `prep_image.py`: crops source watermarks off article images (`--bottom 0.13` for GSMArena).
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption and records the key in `data/posted.json` (dedup).
 - `data/*.example.json`, `data/digest.caption.example.html`: reference content copied from real @techhub_ir posts.
 
@@ -27,5 +28,13 @@ Rules:
 - Normalize keys: `digest:YYYY-MM-DD`, `registry:YYYY-MM-DD`, `news:<domain>/<path-without-query>`. `send.py` skips keys already posted.
 - Persian, simple news tone like the reference posts. Card text uses Latin digits (as in the reference images); captions use Persian digits.
 - The photo caption limit for bots is 1024 visible characters; `send.py` refuses longer captions.
-- Captions start with the emoji row `🦎🦎🦎🌄🌄🌄🌄🌄` (`🦎🦎🦎🎆🎆🎆🎆🎆` for price posts) and end with the standard footer (support @hatefstunt, bot t.me/techhublinkbot, channel t.me/techhub_ir).
+- **No emoji row at the top of captions** (the owner removed it). Start directly with the bold title in a blockquote, as in `data/registry-1405-08-10.caption.html`, and end with the standard footer (support @hatefstunt, bot t.me/techhublinkbot, channel t.me/techhub_ir).
 - Commit `data/posted.json` after each run so the next run sees what was already posted.
+
+## No source branding (owner's rule)
+Nothing copied from a source may carry that source's promotion:
+- Remove its @handles, channel or site names, links, hashtags (`#ری_اکت`, `#اطلاع_رسانی` …), "react to our posts" lines, phone numbers and its own service prices or ads.
+- Rewrite the facts in TechHub's own words; never paste a source post verbatim.
+- Images: never post a source's image as-is if it has a logo, watermark, @handle or URL. Crop it off with `prep_image.py` and look at the result, or pick another image. Price tables are always rebuilt as our own `registry` card, never reposted.
+- Don't put a "منبع: …" line on cards or captions.
+- Never repost cracked software, FRP/MDM/iCloud bypass tools or their download links.
