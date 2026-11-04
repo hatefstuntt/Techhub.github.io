@@ -5,6 +5,7 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 
 ## Files
 - `templates/card.html`: one template, three layouts (`digest`, `registry`, `single`), with the TechHub logo, Vazirmatn font and footer bar.
+- Single cards without a usable source photo can use `"graphic": {"label", "icons": [idcard|plane|star], "chips"}` instead of `image` (see data/news-fragment-kyc.json). Add new icons to `GFX` in the template when needed.
 - `render.js`: `node render.js data.json out.png` renders a card (Playwright/Chromium).
 - `prep_image.py`: crops source watermarks off article images (`--bottom 0.13` for GSMArena).
 - `send.py`: `TG_BOT_TOKEN=... python3 send.py out.png caption.html --key <id>` posts a photo plus HTML caption to every channel in `DEFAULT_CHATS` and records (key, chat) in `data/posted.json` (dedup per channel).
@@ -20,6 +21,12 @@ The Telegram Bot API is reachable directly from the cloud session, so there is n
 - **t.me/s/figofixir**: mobile repair/unlock channel. Use only general news from it; never repost cracked software, FRP/MDM/iCloud bypass tools or their download links.
 - **t.me/rezatopgsmir**: the public web preview is disabled, so it can't be read from here.
 - **top-gsm.ir**: blocks connections from outside Iran (connection reset / 503), so it can't be read from here.
+- **t.me/s/iaghapour**: Persian tech/internet news (Telegram, Windows, apps). Usable after rewriting; its images carry its branding, so use the original article's image or a `graphic` hero instead.
+- **t.me/s/asrnovin_ir**: Persian tech/security news and Iran internet outage reports (good for the digest's internet section). Skip its VPN tutorials and YouTube promos.
+- **t.me/s/MatinSenPaii**: Persian AI/tech news. Usable after rewriting.
+- **t.me/s/mammadturkgsm**: almost all cracked unlock tools (UnlockTool, TSM, XRY cracks). Do not use those posts; only general repair news, if any.
+- **t.me/haji_part1**: only invite links, no news content. Not usable.
+- Telegram-channel news is second-hand: confirm the fact with an original or reputable report (web search) before posting, and mark unofficial items as unofficial or "شایعه".
 - Global mobile/tech news: gsmarena.com and similar (reachable; use the article's own image).
 - Fetch a public channel with `curl -sS https://t.me/s/<channel>`. Telesco.pe image downloads sometimes return a 500 error; retry 2–3 times.
 

@@ -52,6 +52,18 @@ ul.bul li:before{content:"";width:11px;height:11px;border-radius:50%;background:
 .hero img{display:block;width:100%;height:470px;object-fit:cover}
 .headline{font-size:33px;font-weight:900;line-height:1.55;margin-bottom:14px}
 .src{font-size:19px;color:var(--muted);font-weight:500;margin-top:10px}
+/* graphic hero (no source photo) */
+.gfx{position:relative;height:420px;border-radius:20px;overflow:hidden;margin-bottom:22px;
+  background:radial-gradient(circle at 78% 30%,#6f86ff 0%,#3a4fd1 45%,#26328f 100%);display:flex;align-items:center;justify-content:center;direction:ltr}
+.gfx .ring{position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,.14)}
+.gfx .icons{display:flex;gap:34px;align-items:center;z-index:1}
+.gfx .bubble{width:150px;height:150px;border-radius:40px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.gfx .bubble.big{width:190px;height:190px;border-radius:52px;background:#fff}
+.gfx .bubble svg{width:62%;height:62%}
+.gfx .lbl{position:absolute;left:30px;top:26px;color:#fff;font-weight:900;font-size:30px;letter-spacing:.3px;z-index:1}
+.gfx .chips{position:absolute;right:26px;bottom:24px;display:flex;gap:10px;z-index:1;direction:rtl}
+.gfx .chip{background:#fff;color:var(--navy);border-radius:12px;padding:6px 16px;font-weight:800;font-size:21px}
+.gfx .chip.y{background:var(--yellow)}
 /* registry */
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
 .colh{display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:var(--navy);padding:0 12px 6px;direction:ltr}
@@ -105,6 +117,17 @@ const ICONS={
   news:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h6"/></svg>'
 };
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const GFX={
+  star:'<svg viewBox="0 0 24 24"><path fill="#f6c21c" d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>',
+  plane:'<svg viewBox="0 0 24 24"><path fill="#3a4fd1" d="M21.6 3.3 2.9 10.5c-1.2.5-1.2 1.3-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.4l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.6c.3-1.3-.5-1.9-1.3-1.5zM8.4 13.3l9.2-5.8c.4-.3.9-.1.5.3l-7.6 6.9-.3 3.3z"/></svg>',
+  idcard:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2.2"/><path d="M5.3 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14 10h4.5M14 13.5h3"/><path d="M3 3l18 18" stroke="#ff5a6a" stroke-width="2.4"/></svg>'
+};
+function gfx(g){
+  const rings=[[520,-120,-60],[360,620,180],[240,40,260]].map(([d,l,t])=>`<div class="ring" style="width:${d}px;height:${d}px;left:${l}px;top:${t}px"></div>`).join('');
+  const icons=g.icons.map((k,i)=>`<div class="bubble ${i===Math.floor(g.icons.length/2)?'big':''}">${GFX[k]||''}</div>`).join('');
+  return `<div class="gfx">${rings}<div class="lbl">${esc(g.label||'')}</div><div class="icons">${icons}</div>
+    <div class="chips">${(g.chips||[]).map((c,i)=>`<span class="chip ${i===0?'y':''}">${esc(c)}</span>`).join('')}</div></div>`;
+}
 function section(icon,title,body){return `<section class="card"><div class="sh"><div class="ic">${ICONS[icon]}</div><h2>${esc(title)}</h2></div>${body}</section>`}
 
 function render(d){
@@ -118,7 +141,7 @@ function render(d){
       section('phone',d.news_title||'خبرهای تکنولوژی',`<div class="tiles">${d.news.map(n=>`<div class="tile"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></div>`).join('')}</div>`);
   } else if(d.type==='single'){
     m.innerHTML=`<section class="card">
-      ${d.image?`<div class="hero"><img src="${esc(d.image)}"></div>`:''}
+      ${d.image?`<div class="hero"><img src="${esc(d.image)}"></div>`:(d.graphic?gfx(d.graphic):'')}
       <div class="headline">${esc(d.headline)}</div>
       <ul class="bul">${(d.points||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
       ${d.source?`<div class="src">منبع: ${esc(d.source)}</div>`:''}
