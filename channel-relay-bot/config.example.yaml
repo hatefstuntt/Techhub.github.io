@@ -1,0 +1,67 @@
+# Copy to config.yaml and fill in. Never commit config.yaml (it holds your keys).
+
+telegram:
+  api_id: 1234567                 # from https://my.telegram.org → API development tools
+  api_hash: "0123456789abcdef0123456789abcdef"
+  bot_token: "123456:ABC..."      # a NEW bot from @BotFather, admin in your channel(s), with no webhook
+  owner_id: 1010355565            # your numeric Telegram id (previews and buttons go here)
+
+# Channels to read. Your own Telegram account must be a member of each.
+sources:
+  - channel: "@sabregistry"
+  - channel: "@asrnovin_ir"
+  - channel: "@iaghapour"
+    branding: {crop_bottom: 0.0}   # per-source image crop (fraction) to cut off its watermark band
+    filters:
+      include_keywords: []         # only posts containing one of these (empty = all)
+
+# Your channel(s); the bot must be admin there with permission to post.
+targets:
+  - "@techhubvpn"
+
+schedule:
+  posts_per_day: 1                # how many posts a day
+  start_hour: 12                  # first post time (Tehran); posts are spread evenly to end_hour
+  end_hour: 12
+  approval: true                  # true: every post comes to you first with ✅ / ❌ buttons
+  publish_on_approve: false       # true: publish right after ✅ (ignores the daily slots)
+  max_age_hours: 24               # don't publish queued posts older than this
+
+filters:
+  skip_forwards: true             # skip posts the source forwarded from others
+  min_text_length: 40
+  require_text: true
+  require_media: false
+  max_video_mb: 49                # Bot API upload limit is 50 MB
+  exclude_keywords: ["کرک", "crack", "unlocktool", "frp", "icloud bypass", "دانلود رایگان"]
+  # ad_patterns: lines containing any of these are removed (defaults in formatter.py)
+
+format:                           # your channel's caption format (Telegram HTML)
+  title_emoji: "📌"
+  body_label: "📰| <b>خلاصه خبر:</b>"
+  footer:
+    - "🛂 | <b>ثبت و پاس موجود، استعلام قیمت:</b>"
+    - "<blockquote>@hatefstunt</blockquote>"
+    - "🤖 | <b>ربات دریافت سرویس:</b>"
+    - "<blockquote>t.me/techhublinkbot</blockquote>"
+    - "📢 | <b>کانال اخبار تکنولوژی:</b>"
+    - "<blockquote>t.me/techhub_ir</blockquote>"
+
+branding:                         # applied to every photo (per-source values override)
+  crop_top: 0.0
+  crop_bottom: 0.0
+  logo: null                      # e.g. "logo.png" (transparent PNG) to stamp your logo
+  logo_corner: "bottom-left"
+  logo_width: 0.18
+  logo_opacity: 0.9
+
+rewrite:                          # optional: rewrite each post in your tone with Claude
+  enabled: false                  # needs ANTHROPIC_API_KEY in the environment
+  model: "claude-opus-5-5"        # "claude-haiku-5-5" costs far less per post
+  effort: "low"
+  fallbacks: true                 # retry on a fallback model if a request is declined
+  style_notes: "خبری، ساده و کوتاه؛ بدون اغراق."
+  example_post: ""
+
+backfill_per_source: 5            # on start, also look at the last N posts of each source
+data_dir: "data"

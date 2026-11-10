@@ -1,2 +1,5 @@
 telegram-bot/out/
 __pycache__/
+channel-relay-bot/config.yaml
+channel-relay-bot/data/
+.pytest_cache/
