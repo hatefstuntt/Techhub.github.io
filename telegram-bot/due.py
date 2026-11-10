@@ -22,16 +22,21 @@ REGISTRY_SOURCES = ["sabregistry"]
 SEEN = os.path.join(HERE, "data", "registry-seen.json")
 
 
-def expected_by(now):
-    if now.hour < 9:
+def expected_by(now, target=None, start=9, end=22):
+    """Posts that should be out by this hour: the daily target spread evenly over start..end."""
+    target = DAILY_TARGET if target is None else target
+    if target <= 0 or now.hour < start:
         return 0
-    return min(DAILY_TARGET, 2 * ((now.hour - 9) // 2) + 2)
+    if now.hour >= end:
+        return target
+    import math
+    return min(target, math.ceil(target * (now.hour - start + 1) / (end - start + 1)))
 
 
-def posted_today(now):
+def posted_today(now, chat=None):
     """Count today's posts in the channel itself (git-independent)."""
     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    return sum(1 for p in state.fetch_recent(CHANNEL) if p["time"] and p["time"] >= start)
+    return sum(1 for p in state.fetch_recent(chat or CHANNEL) if p["time"] and p["time"] >= start)
 
 
 def new_registry_posts():
@@ -59,16 +64,30 @@ def new_registry_posts():
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--chat", action="append", help="channel(s) to check; repeatable")
+    ap.add_argument("--target", type=int, action="append", help="daily target per --chat, same order")
+    ap.add_argument("--start", type=int, default=9)
+    ap.add_argument("--end", type=int, default=22)
+    ap.add_argument("--max-per-run", type=int, default=MAX_PER_RUN)
+    ap.add_argument("--no-registry", action="store_true")
+    a = ap.parse_args()
+    chats = a.chat or [CHANNEL]
+    targets = a.target or [DAILY_TARGET] * len(chats)
     now = datetime.now(TEHRAN)
-    exp, done = expected_by(now), posted_today(now)
-    deficit = max(0, exp - done)
-    reg = new_registry_posts()
-    posts = min(MAX_PER_RUN, deficit)
-    if reg and posts == 0:
-        posts = 1  # a new price table is always worth a post
-    print(f"tehran={now:%Y-%m-%d %H:%M} expected={exp} posted_today={done} deficit={deficit}")
+    reg = [] if a.no_registry else new_registry_posts()
+    owed = {}
+    for chat, target in zip(chats, targets):
+        exp, done = expected_by(now, target, a.start, a.end), posted_today(now, chat)
+        owed[chat] = min(a.max_per_run, max(0, exp - done))
+        print(f"{chat} tehran={now:%Y-%m-%d %H:%M} target={target} expected={exp} posted_today={done} owed={owed[chat]}")
     for ch, pid in reg:
         print(f"NEW REGISTRY POST https://t.me/{ch}/{pid}")
+    posts = max(owed.values()) if owed else 0
+    if reg and posts == 0:
+        posts = 1
+    print("POST_TO " + " ".join(f"--chat {c}" for c, n in owed.items() if n > 0 or (reg and n == 0)))
     print(f"DUE posts={posts} registry={'yes' if reg else 'no'}")
 
 
